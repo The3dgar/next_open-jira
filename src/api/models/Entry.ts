@@ -3,6 +3,14 @@ import { Entry } from '@/interfaces';
 
 export interface IEntry extends Entry {}
 
+// export interface EntryDoc extends mongoose.Document {
+//   description: string;
+//   createdAt: number;
+//   status: string;
+// }
+
+// interface IEntryModel extends mongoose.Model<EntryDoc> {}
+
 const entrySchema = new Schema({
   description: { type: String, required: true },
   createdAt: { type: Number, required: true },
@@ -12,6 +20,7 @@ const entrySchema = new Schema({
       values: ['pending', 'in progress', 'finished'],
       message: '{VALUE} no es permitido',
     },
+    default: 'pending',
   },
 });
 

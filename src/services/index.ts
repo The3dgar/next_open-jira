@@ -1,0 +1,1 @@
+export { EntriesServices } from './entriesServices';

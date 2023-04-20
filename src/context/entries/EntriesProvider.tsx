@@ -1,8 +1,7 @@
-import { useReducer } from 'react';
-import { v4 } from 'uuid';
+import { useReducer, useEffect } from 'react';
 import { EntriesContext, entriesReducer } from './';
 import { Entry } from '@/interfaces';
-
+import { EntriesServices } from '@/services';
 export interface EntriesState {
   entries: Entry[];
 }
@@ -18,27 +17,42 @@ interface Props {
 export const EntriesProvider = ({ children }: Props) => {
   const [state, dispatch] = useReducer(entriesReducer, Entries_INITIAL_STATE);
 
-  const addEntry = (description: string) => {
-    const newEntry: Entry = {
-      _id: v4(),
-      description,
-      status: 'pending',
-      createdAt: Date.now(),
-    };
-
-    dispatch({ type: 'Entries add entry', payload: newEntry });
+  const addEntry = async (description: string) => {
+    const { data } = await EntriesServices.postEntry(description);
+    dispatch({ type: 'Entries add entry', payload: data });
   };
 
-  const updateEntry = (entry: Entry) => {
-    dispatch({ type: 'Entries update entry', payload: entry });
+  const updateEntry = async (entry: Entry) => {
+    try {
+      const { data } = await EntriesServices.updateEntry(entry);
+      dispatch({
+        type: 'Entries update entry',
+        payload: data,
+      });
+    } catch (error) {
+      console.log(error);
+    }
   };
+
+  const refreshEntries = async () => {
+    try {
+      const { data } = await EntriesServices.getEntries();
+      dispatch({ type: 'Entries get entries', payload: data });
+    } catch (error) {
+      console.log('[refreshEntries] handler error');
+    }
+  };
+
+  useEffect(() => {
+    refreshEntries();
+  }, []);
 
   return (
     <EntriesContext.Provider
       value={{
         ...state,
         addEntry,
-        updateEntry
+        updateEntry,
       }}>
       {children}
     </EntriesContext.Provider>
