@@ -9,6 +9,7 @@ import {
 import { Entry } from '@/interfaces';
 import { useUi } from '@/context/ui';
 import { useRouter } from 'next/router';
+import { dateHandler } from '@/utils';
 
 interface Props {
   entry: Entry;
@@ -48,7 +49,9 @@ export const EntryCard = ({ entry }: Props) => {
 
         <CardActions
           sx={{ display: 'flex', justifyContent: 'end', paddingRight: 2 }}>
-          <Typography variant='body2'> hace 30m min</Typography>
+          <Typography variant='body2'>
+           Hace {dateHandler.getFormatDistanceToNow(entry.createdAt)}
+          </Typography>
         </CardActions>
       </CardActionArea>
     </Card>

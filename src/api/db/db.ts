@@ -28,10 +28,9 @@ export const connect = async () => {
       return;
     }
 
-    await disconnect()
+    await disconnect();
   }
 
-  
   await mongoose.connect(mongoUri);
   mongooseConnection.isConnected = 1;
   console.log('Conectado a mongo db:', mongoUri);
@@ -41,5 +40,6 @@ export const disconnect = async () => {
   if (mongooseConnection.isConnected !== 0) return;
 
   await mongoose.disconnect();
+  mongooseConnection.isConnected = 0;
   console.log('Desconectando de MongoDB');
 };

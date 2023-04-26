@@ -25,6 +25,7 @@ import { Entry, EntryStatus } from '@/interfaces';
 import { dbEntries } from '@/api/db';
 import { useEntries } from '@/context/entries';
 import { useRouter } from 'next/router';
+import { dateHandler } from '@/utils';
 
 const validStatus: EntryStatus[] = ['finished', 'in progress', 'pending'];
 
@@ -77,7 +78,9 @@ export const EntryPage = ({ entry }: Props) => {
           <Card>
             <CardHeader
               title='Entrada:'
-              subheader={`Creada hace ${entry.createdAt} minutos`}
+              subheader={`Creada hace ${dateHandler.getFormatDistanceToNow(
+                entry.createdAt
+              )}`}
             />
 
             <CardContent>
