@@ -24,6 +24,7 @@ import { Layout } from '@/components/layouts';
 import { Entry, EntryStatus } from '@/interfaces';
 import { dbEntries } from '@/api/db';
 import { useEntries } from '@/context/entries';
+import { useRouter } from 'next/router';
 
 const validStatus: EntryStatus[] = ['finished', 'in progress', 'pending'];
 
@@ -32,7 +33,9 @@ interface Props {
 }
 
 export const EntryPage = ({ entry }: Props) => {
-  const { updateEntry } = useEntries();
+  const { updateEntry, deleteEntry } = useEntries();
+  const router = useRouter();
+
   const [inputValue, setInputValue] = useState(entry.description);
   const [status, setStatus] = useState<EntryStatus>(entry.status);
   const [touched, setTouched] = useState(false);
@@ -55,6 +58,11 @@ export const EntryPage = ({ entry }: Props) => {
       },
       true
     );
+  };
+
+  const onDelete = async () => {
+    await deleteEntry(entry);
+    router.push('/');
   };
 
   const isInvalid = useMemo(
@@ -117,6 +125,7 @@ export const EntryPage = ({ entry }: Props) => {
       </Grid>
 
       <IconButton
+        onClick={onDelete}
         sx={{
           position: 'fixed',
           bottom: 30,

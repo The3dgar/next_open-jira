@@ -17,4 +17,8 @@ export class EntriesServices {
   static updateEntry = async ({ _id, description, status }: Entry) => {
     return entriesApi.put<Entry>('/entries/' + _id, { description, status });
   };
+
+  static deleteEntry = async (_id: string) => {
+    return entriesApi.delete<Entry>('/entries/' + _id);
+  };
 }

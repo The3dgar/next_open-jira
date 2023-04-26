@@ -19,6 +19,8 @@ export default function handlerEntryById(
       return getEntryById(req, res);
     case 'PUT':
       return updateEntry(req, res);
+    case 'DELETE':
+      return deleteEntry(req, res);
     default:
       return res.status(400).json({ message: '' });
   }
@@ -74,6 +76,24 @@ const getEntryById = async (
   if (!entry) {
     return res.status(404).json({ message: 'Entry not found:' + id });
   }
+
+  return res.status(200).json(entry);
+};
+
+const deleteEntry = async (
+  req: NextApiRequest,
+  res: NextApiResponse<Data>
+) => {
+  const { id } = req.query;
+
+  await db.connect();
+
+  const entry = await EntryModel.findByIdAndDelete(id);
+
+  await db.disconnect();
+  if (!entry) {
+    return res.status(404).json({ message: 'Entry not found:' + id });
+  }  
 
   return res.status(200).json(entry);
 };

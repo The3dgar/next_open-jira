@@ -21,8 +21,12 @@ export const EntriesProvider = ({ children }: Props) => {
   const { enqueueSnackbar } = useSnackbar();
 
   const addEntry = async (description: string) => {
-    const { data } = await EntriesServices.postEntry(description);
-    dispatch({ type: 'Entries add entry', payload: data });
+    try {
+      const { data } = await EntriesServices.postEntry(description);
+      dispatch({ type: 'Entries add entry', payload: data });
+    } catch (error) {
+      console.log('[addEntry] handler error');
+    }
   };
 
   const updateEntry = async (entry: Entry, showSnackbar = false) => {
@@ -44,7 +48,7 @@ export const EntriesProvider = ({ children }: Props) => {
         });
       }
     } catch (error) {
-      console.log(error);
+      console.log('[updateEntry] handler error');
     }
   };
 
@@ -54,6 +58,24 @@ export const EntriesProvider = ({ children }: Props) => {
       dispatch({ type: 'Entries get entries', payload: data });
     } catch (error) {
       console.log('[refreshEntries] handler error');
+    }
+  };
+
+  const deleteEntry = async (entry: Entry) => {
+    try {
+      const { data } = await EntriesServices.deleteEntry(entry._id);
+
+      dispatch({ type: 'Entries delete entry', payload: data });
+      enqueueSnackbar('Entrada eliminada', {
+        variant: 'info',
+        autoHideDuration: 1000,
+        anchorOrigin: {
+          vertical: 'bottom',
+          horizontal: 'center',
+        },
+      });
+    } catch (error) {
+      console.log('[deleteEntry] handler error');
     }
   };
 
@@ -67,6 +89,7 @@ export const EntriesProvider = ({ children }: Props) => {
         ...state,
         addEntry,
         updateEntry,
+        deleteEntry,
       }}>
       {children}
     </EntriesContext.Provider>
