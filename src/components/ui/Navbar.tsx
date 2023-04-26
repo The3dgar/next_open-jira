@@ -1,14 +1,15 @@
 import React from 'react';
-import { AppBar, IconButton, Toolbar, Typography } from '@mui/material';
+import { AppBar, IconButton, Toolbar, Typography, Link } from '@mui/material';
 import MenuOutlinedIcon from '@mui/icons-material/MenuOutlined';
-import { UIContext } from '@/context/ui';
+import { useUi } from '@/context/ui';
+import NextLink from 'next/link';
 
 interface Props {
   title?: string;
 }
 
 export const Navbar = ({ title = 'Open Jira' }: Props) => {
-  const { openSideMenu } = React.useContext(UIContext);
+  const { openSideMenu } = useUi();
 
   return (
     <AppBar position='sticky'>
@@ -16,7 +17,14 @@ export const Navbar = ({ title = 'Open Jira' }: Props) => {
         <IconButton size='large' edge='start' onClick={openSideMenu}>
           <MenuOutlinedIcon />
         </IconButton>
-        <Typography variant='h6'>{title}</Typography>
+        <Link
+          component={NextLink}
+          href='/'
+          passHref
+          underline='none'
+          color={'white'}>
+          <Typography variant='h6'>{title}</Typography>
+        </Link>
       </Toolbar>
     </AppBar>
   );

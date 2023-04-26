@@ -1,10 +1,10 @@
-import { useContext, useMemo, DragEvent } from 'react';
+import { useMemo, DragEvent } from 'react';
 import { Paper, List } from '@mui/material';
 import UIstyles from './UI.module.scss';
 import { EntryCard } from './EntryCard';
 import { EntryStatus } from '@/interfaces';
-import { EntriesContext } from '@/context/entries';
-import { UIContext } from '@/context/ui';
+import { useEntries } from '@/context/entries';
+import { useUi } from '@/context/ui';
 
 import styles from './EntryList.module.scss';
 
@@ -13,8 +13,8 @@ interface Props {
 }
 
 export const EntryList = ({ status }: Props) => {
-  const { entries, updateEntry } = useContext(EntriesContext);
-  const { isDragging, endDragging } = useContext(UIContext);
+  const { entries, updateEntry } = useEntries();
+  const { isDragging, endDragging } = useUi();
 
   const entriesByStatus = useMemo(
     () => entries.filter((e) => e.status === status),
