@@ -1,11 +1,12 @@
-import mongoose from 'mongoose';
+// import mongoose from 'mongoose';
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 
 export async function middleware(req: NextRequest) {
   if (req.nextUrl.pathname.startsWith('/api/entries/')) {
     const id = req.nextUrl.pathname.replace('/api/entries/', '');
-    const check = mongoose.Types.ObjectId.isValid(id);
+    // const check = mongoose.Types.ObjectId.isValid(id);
+    const check = new RegExp("^[0-9a-fA-F]{24}$");
     if (!check) {
       const url = new URL('/api/bad-request', req.url);
       url.search = `?message=${id} is not valid`;
